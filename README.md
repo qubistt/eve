@@ -1,23 +1,41 @@
-# Serenity Todo List Bot with Shuttle
+# Eve: Your Personal Assistant and Emotional Ally
 
-In this example we will deploy a Serenity bot with Shuttle that can add, list and complete todos using [Application Commands](https://discord.com/developers/docs/interactions/application-commands). To persist the todos we need a database. We will have Shuttle provison a PostgreSQL database for us by enabling the `sqlx-postgres` feature for `shuttle-service` and passing `#[shared::Postgres] pool: PgPool` as an argument to our `main` function.
+Eve is your friendly and insightful companion on Discord, designed to help you manage tasks, improve your well-being, and offer a supportive presence. 
 
-To run this bot we need a valid Discord Token. To get started log in to the [Discord developer portal](https://discord.com/developers/applications).
+**What can Eve do?**
 
-1. Click the New Application button, name your application and click Create.
-2. Navigate to the Bot tab in the lefthand menu, and add a new bot.
-3. On the bot page click the Reset Token button to reveal your token. Put this token in your `Secrets.toml`. It's very important that you don't reveal your token to anyone, as it can be abused. Create a `.gitignore` file to omit your `Secrets.toml` from version control.
+* **Become your accountability buddy:**  
+  * Set reminders and track your progress on tasks with Eve's to-do list feature. 
+  * Feeling overwhelmed? Eve can help you break down large goals into smaller, manageable steps. 
+* **Offer emotional support:** 
+  * Feeling stressed or down? Vent to Eve in a safe, judgment-free space. 
+  * Eve can offer encouraging words, mindfulness exercises, and helpful resources to navigate difficult emotions. 
+* **Provide guidance:** 
+  * Stuck on a decision? Eve can help you explore different perspectives and identify the best course of action. 
 
-To add the bot to a server we need to create an invite link.
+**Getting Started:**
 
-1. On your bot's application page, open the OAuth2 page via the lefthand panel.
-2. Go to the URL Generator via the lefthand panel, and select the `applications.commands` scope.
-3. Copy the URL, open it in your browser and select a Discord server you wish to invite the bot to.
+1.  **Invite Eve to your Discord server:** Follow the instructions in the "Adding the Bot to a Server" section below to create an invite link. 
+2.  **Talk to Eve:** Use intuitive commands (explained in the server after adding Eve) to interact and access Eve's features. 
 
-For this example we also need a `GuildId`.
+**Security and Privacy:**
 
-1. Open your Discord client, open the User Settings and navigate to Advanced. Enable Developer Mode.
-2. Right click the Discord server you'd like to use the bot in and click Copy Id. This is your Guild ID.
-3. Store it in `Secrets.toml` and retrieve it like we did for the Discord Token.
+Eve takes your privacy seriously. All your interactions with Eve are confidential and not shared with anyone. 
 
-For more information please refer to the [Discord docs](https://discord.com/developers/docs/getting-started) as well as the [Serenity repo](https://github.com/serenity-rs/serenity) for more examples.
+**Adding Eve to your Server:**
+
+1.  **Get your Discord Token and Guild ID (Server ID):** 
+    * Follow the instructions in the original markdown for obtaining your Discord Token and Guild ID. Remember to keep your token secure!
+2.  **Configure Eve (Optional):** 
+    * You can customize Eve's behavior by following further instructions provided in the server after adding her. 
+3.  **Invite Eve:** 
+    * Use the generated invite link to add Eve to your Discord server. 
+
+**Additional Resources:**
+
+For more information on Discord bots and application commands, refer to the provided links:
+
+* Discord Docs: [https://discordpy.readthedocs.io/en/stable/discord.html](https://discordpy.readthedocs.io/en/stable/discord.html)
+* Serenity Library: [https://github.com/serenity-rs](https://github.com/serenity-rs)
+
+Eve is constantly learning and evolving. Feel free to provide feedback and suggestions to help us improve your experience! 
