@@ -13,23 +13,14 @@ Eve is your friendly and insightful companion on Discord, designed to help you m
 * **Provide guidance:** 
   * Stuck on a decision? Eve can help you explore different perspectives and identify the best course of action. 
 
-**Getting Started:**
-
-1.  **Invite Eve to your Discord server:** Follow the instructions in the "Adding the Bot to a Server" section below to create an invite link. 
-2.  **Talk to Eve:** Use intuitive commands (explained in the server after adding Eve) to interact and access Eve's features. 
 
 **Security and Privacy:**
 
-Eve takes your privacy seriously. All your interactions with Eve are confidential and not shared with anyone. 
+Eve takes your privacy seriously. All your interactions with Eve are confidential and stay between you and the AI model
 
 **Adding Eve to your Server:**
 
-1.  **Get your Discord Token and Guild ID (Server ID):** 
-    * Follow the instructions in the original markdown for obtaining your Discord Token and Guild ID. Remember to keep your token secure!
-2.  **Configure Eve (Optional):** 
-    * You can customize Eve's behavior by following further instructions provided in the server after adding her. 
-3.  **Invite Eve:** 
-    * Use the generated invite link to add Eve to your Discord server. 
+WORK IN PROGRESS
 
 **Additional Resources:**
 
