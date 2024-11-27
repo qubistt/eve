@@ -5,7 +5,7 @@ import {
 	InteractionType,
 	verifyKey, 
 } from "discord-interactions";
-import { SLAP_COMMAND, INVITE_COMMAND } from "./servers.js"; 
+import { SLAP_COMMAND, INVITE_COMMAND } from "./commands.js"; 
 
 const INVITE_URL = `https://discord.com/oauth2/authorize?client_id=${process.env.APPLICATION_ID}&scope=applications.commands`; 
  
@@ -81,7 +81,7 @@ server.post("/", async (request, response) => {
 	}
 });
  
-server.listen(3000, async (error, address) => {
+server.listen(3002, async (error, address) => {
 	if (error) {
 		server.log.error(error);
 		process.exit(1);
