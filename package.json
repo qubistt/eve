@@ -1,12 +1,32 @@
 {
-	"name": "eve",
-	"version": "0.1.0",
-	"dependencies": {
-		"discord-interactions": "^2.0.2",
-		"raw-body": "^2.4.1"
-	},
-	"devDependencies": {
-		"@types/node": "^22.10.0",
-		"typescript": "^5.7.2"
-	}
+  "name": "eve",
+  "version": "1.0.0",
+  "description": "Eve is your friendly and insightful companion on Discord, designed to help you manage tasks, improve your well-being, and offer a supportive presence.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node -r dotenv/config server.js",
+    "register": "node -r dotenv/config register.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qubistt/eve.git"
+  },
+  "keywords": [
+    "bot",
+    "serverless",
+    "pyschology"
+  ],
+  "author": "Advaith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qubistt/eve/issues"
+  },
+  "homepage": "https://github.com/qubistt/eve#readme",
+  "dependencies": {
+    "discord-interactions": "^4.1.0",
+    "dotenv": "^16.4.5",
+    "fastify": "^5.1.0",
+    "fastify-raw-body": "^5.0.0"
+  }
 }
