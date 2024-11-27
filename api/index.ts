@@ -41,7 +41,7 @@ module.exports = async (request, response) => {
 		// Verify the request
 		const signature = request.headers["x-signature-ed25519"];
 		const timestamp = request.headers["x-signature-timestamp"];
-		const rawBody = await getRawBody(request);
+		const rawBody = JSON.stringify(request.body); 
  
 		const isValidRequest = verifyKey(
 			rawBody,
