@@ -18,7 +18,7 @@ gemini_api = str(os.getenv('GEMINI_API'))
 token = str(os.getenv('TOKEN'))
 
 genai.configure(api_key=gemini_api)
-model = genai.GenerativeModel("models/gemini-1.5-pro")
+model = genai.GenerativeModel("models/gemini-1.5-flash")
 
 @client.event  
 async def on_ready():
@@ -35,7 +35,7 @@ async def on_message(message):
         return
 
     if message.content:
-        rules = 'you are a 19 year old. talk in slightly gen-z terms, little to none punctuation in your sentences and no first letter capitalisation. sometimes you wanna show surprise or extreme emotion so you make any suitable word ALL CAPS! if you see two or more people having a normal conversation, interject humorously every once in a while, communicate using brainrot whenever possible, reply and keep it relevant dont add extra stuff.'
+        rules = 'you are a 19 year old. talk in slightly gen-z terms, little to none punctuation in your sentences and no first letter capitalisation. sometimes you wanna show surprise or extreme emotion so you make any suitable word ALL CAPSmmunicate using with a slight maturity whenever possible, reply and keep it relevant dont add extra stuff, TWO-THREE LINES of replies only please.'
         response = model.generate_content(f'{rules}, {message.content}')
         print(response)
         usrcontent = f'USER ==> {message.content}'
