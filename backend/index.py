@@ -17,63 +17,53 @@ model = genai.GenerativeModel("models/gemini-1.5-flash")
 intents = discord.Intents.default()
 intents.message_content = True
 
-client = discord.Client(intents=intents)
-tree = app_commands.CommandTree(client)
+
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Dictionary to store message histories
+message_histories = {}
 
 @bot.event
 async def on_ready():
-    print(f'We have logged in as {bot.user}')
-    try:
-        await bot.tree.sync()
-        print("Commands synced successfully.")
-    except Exception as e:
-        print(f"Error syncing commands: {e}")
-
-# Initialize history_msg as an empty list
-history_msg = []
+    print(f'Logged in as {bot.user}')
 
 @bot.event
 async def on_message(message):
     if message.author == bot.user:  # Check if the message author is the bot itself
         return
 
-    if message.content:
-        global history_msg
-        # Append the new message to history_msg
-        history_msg.append(f'{message.author.name}: {message.content}')
-        # Keep only the last 50 messages
-        history_msg = history_msg[-50:]
+    channel_id = message.channel.id
 
-        print(f'channel id ==> {message.channel.id}')
-        rules = """you’re eve, a friendly and supportive chatbot. you’re here to listen and offer advice on anything 
-        from school to personal stuff. keep it casual but always helpful, and avoid over-explaining things. no need 
-        for fancy language or extra punctuation and do not capitalise the first letters—just clear and real. stay friendly and conversational and ever
-        so slightly genz, like talking to a good friend, but also be understanding when things get serious. be careful not to repeat things from 
-        earlier messages or bring up anything random that doesn’t fit the context. your responses should be short 
-        and to the point, but still thoughtful. you’ve got about 50 messages of chat history to work with, so 
-        always use that context to keep the conversation relevant and connected. that means i don't want you repeating the same question you've already
-        asked earlier. when someone asks for help with 
-        school or study advice, make sure your suggestions are clear and practical."""
+    # If the channel ID is not in the dictionary, add it
+    if channel_id not in message_histories:
+        message_histories[channel_id] = []
 
-        response = model.generate_content(f'{rules}, {history_msg} {message.content}')
+    # Append the message to the channel's message history
+    message_histories[channel_id].append(f'{message.author.name}: {message.content}')
+    # Keep only the last 50 messages
+    message_histories[channel_id] = message_histories[channel_id][-50:]
+
+
+    rules = """you’re eve, a friendly and supportive chatbot. you’re here to listen and offer advice on anything 
+    from school to personal stuff. keep it casual but always helpful, and avoid over-explaining things. no need 
+    for fancy language or extra punctuation and do not capitalise the first letters—just clear and real. stay friendly and conversational and ever
+    so slightly genz, like talking to a good friend, but also be understanding when things get serious. be careful not to repeat things from 
+    earlier messages or bring up anything random that doesn’t fit the context. your responses should be short 
+    and to the point, but still thoughtful. you’ve got about 50 messages of chat history to work with, so 
+    always use that context to keep the conversation relevant and connected. that means i don't want you repeating the same question you've already
+    """
+
+    # Process the message as needed
+    await bot.process_commands(message)
+
+    response = model.generate_content(f'{rules}, {message_histories[channel_id]} {message.content}')
         # print(response)
         
             
-        await message.channel.send(response.text)  # Send the AI-generated response as a Discord message
+    await message.channel.send(response.text)  # Send the AI-generated response as a discord message
 
         
-
-
-@bot.tree.command(name="show", description="Shows the console the current message history")
-async def show(interaction: discord.Interaction):
-    global history_msg
-    await interaction.response.send_message("Displaying the current message history in the console.")
-    print("Current message history:")
-    for msg in history_msg:
-        print(msg)
 
 # Run the client
 bot.run(token)
