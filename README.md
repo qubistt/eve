@@ -24,7 +24,7 @@ Eve is a friendly and supportive chatbot designed to interact with users on Disc
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/eve.git
+   git clone https://github.com/qubistt/eve.git
    cd eve
    ```
 
@@ -58,6 +58,7 @@ Eve is a friendly and supportive chatbot designed to interact with users on Disc
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any changes.
+Alternatively, you can contact me at eve@fluentfuture.in if you'd like to share feedback or ask about the bot.
 
 ## License
 
