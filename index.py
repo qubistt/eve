@@ -4,16 +4,7 @@ from discord.ext import commands
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
-import flask
 
-from flask import render_template, Flask
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return render_template("index.html")
-    
 # Load environment variables from .env file
 load_dotenv()
 
@@ -86,5 +77,3 @@ async def show(interaction: discord.Interaction):
 
 # Run the client
 bot.run(token)
-if __name__ == "__main__":
-    app.run(port=5000)
