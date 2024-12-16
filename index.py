@@ -4,7 +4,16 @@ from discord.ext import commands
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
+import flask
 
+from flask import render_template, Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+    
 # Load environment variables from .env file
 load_dotenv()
 
@@ -22,7 +31,6 @@ tree = app_commands.CommandTree(client)
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-history = []
 
 @bot.event
 async def on_ready():
@@ -33,6 +41,9 @@ async def on_ready():
     except Exception as e:
         print(f"Error syncing commands: {e}")
 
+# Initialize history_msg as an empty list
+history_msg = []
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:  # Check if the message author is the bot itself
@@ -40,16 +51,16 @@ async def on_message(message):
 
     if message.content:
         global history_msg
-        messages = []
-        async for msg in message.channel.history(limit=50):
-            messages.append(f'{msg.author.name}: {msg.content}')
-        history_msg = messages
+        # Append the new message to history_msg
+        history_msg.append(f'{message.author.name}: {message.content}')
+        # Keep only the last 50 messages
+        history_msg = history_msg[-50:]
 
         print(f'channel id ==> {message.channel.id}')
         rules = """you’re eve, a friendly and supportive chatbot. you’re here to listen and offer advice on anything 
         from school to personal stuff. keep it casual but always helpful, and avoid over-explaining things. no need 
-        for fancy language or extra punctuation and do not capitalise the first letters—just clear and real. stay friendly and conversational, like talking 
-        to a good friend, but also be understanding when things get serious. be careful not to repeat things from 
+        for fancy language or extra punctuation and do not capitalise the first letters—just clear and real. stay friendly and conversational and ever
+        so slightly genz, like talking to a good friend, but also be understanding when things get serious. be careful not to repeat things from 
         earlier messages or bring up anything random that doesn’t fit the context. your responses should be short 
         and to the point, but still thoughtful. you’ve got about 50 messages of chat history to work with, so 
         always use that context to keep the conversation relevant and connected. that means i don't want you repeating the same question you've already
@@ -58,10 +69,6 @@ async def on_message(message):
 
         response = model.generate_content(f'{rules}, {history_msg} {message.content}')
         # print(response)
-        usrcontent = f'{message.content}'
-        botcontent = f'{response.text}'
-        # print(usrcontent)
-        # print(botcontent)
         
             
         await message.channel.send(response.text)  # Send the AI-generated response as a Discord message
@@ -79,3 +86,5 @@ async def show(interaction: discord.Interaction):
 
 # Run the client
 bot.run(token)
+if __name__ == "__main__":
+    app.run(port=5000)

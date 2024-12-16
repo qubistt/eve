@@ -295,3 +295,7 @@ dist
 .pnp.*
 
 .log.txt
+.DS_Store
+static/.DS_Store
+.DS_Store
+static/.DS_Store
