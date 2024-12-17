@@ -1,9 +1,10 @@
 import discord
 from discord import app_commands
-from discord.ext import commands
+from discord.ext import commands, tasks
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
+import asyncio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,16 +18,19 @@ model = genai.GenerativeModel("models/gemini-1.5-flash")
 intents = discord.Intents.default()
 intents.message_content = True
 
-
-
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Dictionary to store message histories
-message_histories = {}
+# Dictionary to store message histories and pet data
+channel_data = {}
 
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user}')
+    try:
+        await bot.tree.sync()
+        print(f'Logged in as {bot.user}')
+        pet_status_update.start()  # Start the background task
+    except Exception as e:
+        print(f"Error syncing commands: {e}")
 
 @bot.event
 async def on_message(message):
@@ -36,14 +40,13 @@ async def on_message(message):
     channel_id = message.channel.id
 
     # If the channel ID is not in the dictionary, add it
-    if channel_id not in message_histories:
-        message_histories[channel_id] = []
+    if channel_id not in channel_data:
+        channel_data[channel_id] = {'messages': [], 'pet': None}
 
     # Append the message to the channel's message history
-    message_histories[channel_id].append(f'{message.author.name}: {message.content}')
+    channel_data[channel_id]['messages'].append(f'{message.author.name}: {message.content}')
     # Keep only the last 50 messages
-    message_histories[channel_id] = message_histories[channel_id][-50:]
-
+    channel_data[channel_id]['messages'] = channel_data[channel_id]['messages'][-50:]
 
     rules = """you’re eve, a friendly and supportive chatbot. you’re here to listen and offer advice on anything 
     from school to personal stuff. keep it casual but always helpful, and avoid over-explaining things. no need 
@@ -57,13 +60,67 @@ async def on_message(message):
     # Process the message as needed
     await bot.process_commands(message)
 
-    response = model.generate_content(f'{rules}, {message_histories[channel_id]} {message.content}')
-        # print(response)
+    response = model.generate_content(f'{rules}, {channel_data[channel_id]["messages"]} {message.content}')
         
-            
     await message.channel.send(response.text)  # Send the AI-generated response as a discord message
 
-        
+# Background task to update pet status
+@tasks.loop(minutes=10)  # Adjust the interval as needed
+async def pet_status_update():
+    for channel_id, data in channel_data.items():
+        pet = data.get('pet')
+        if pet:
+            pet['food'] -= 10  # Decrease food level
+            if pet['food'] < 0:
+                pet['food'] = 0
+                pet['health'] -= 10  # Decrease health if food is 0
+                if pet['health'] < 0:
+                    pet['health'] = 0
 
-# Run the client
+# Slash command to create a pet
+@bot.tree.command(name="create_pet", description="Create a pet (dog or cat)")
+async def create_pet(interaction: discord.Interaction, pet_type: str):
+    channel_id = interaction.channel_id
+
+    # Ensure the channel ID is in the dictionary
+    if channel_id not in channel_data:
+        channel_data[channel_id] = {'messages': [], 'pet': None}
+
+    if pet_type.lower() not in ["dog", "cat"]:
+        await interaction.response.send_message("Invalid pet type! Please choose either 'dog' or 'cat'.")
+        return
+
+    channel_data[channel_id]['pet'] = {
+        'type': pet_type.lower(),
+        'health': 100,
+        'food': 100
+    }
+    await interaction.response.send_message(f"A {pet_type.lower()} has been created!")
+
+# Slash command to check pet status
+@bot.tree.command(name="pet_status", description="Check the status of your pet")
+async def pet_status(interaction: discord.Interaction):
+    channel_id = interaction.channel_id
+    pet = channel_data[channel_id].get('pet')
+
+    if not pet:
+        await interaction.response.send_message("No pet found in this channel. Create one using /create_pet.")
+        return
+
+    await interaction.response.send_message(f"Your {pet['type']} has {pet['health']} health and {pet['food']} food.")
+
+# Slash command to feed the pet
+@bot.tree.command(name="feed_pet", description="Feed your pet")
+async def feed_pet(interaction: discord.Interaction):
+    channel_id = interaction.channel_id
+    pet = channel_data[channel_id].get('pet')
+
+    if not pet:
+        await interaction.response.send_message("No pet found in this channel. Create one using /create_pet.")
+        return
+
+    pet['food'] = min(pet['food'] + 20, 100)
+    await interaction.response.send_message(f"You fed your {pet['type']}. Its food level is now {pet['food']}.")
+
+# Run the bot
 bot.run(token)
